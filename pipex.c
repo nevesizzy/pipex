@@ -56,14 +56,12 @@ int	main(int argc, char **argv, char **envp)
 	if (pid == -1)
 		exit_error();
 	if (pid == 0)
-	{
-		//close(fd[0]);
 		child_process(fd, argv, envp);
-	}
 	//close(fd[1]);
 	waitpid(pid, NULL, 0);
 	father_process(fd, argv, envp);
 	//close(fd[0]);
 	//return (EXIT_SUCCESS);
 }
+
 // valgrind --leak-check=full --trace-children=yes ./pipex file1 cmd1 cmd2 file2

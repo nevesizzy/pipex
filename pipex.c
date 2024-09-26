@@ -6,7 +6,7 @@
 /*   By: isneves- <isneves-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:51:37 by isneves-          #+#    #+#             */
-/*   Updated: 2024/08/29 19:20:32 by isneves-         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:26:35 by isneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 	{
-		custom_error("Error", "Wrong number of arguments");
-		custom_error("Usage", "./pipex <file1> <cmd1> <cmd2> <file2>");
+		custom_error("pipex:", "wrong number of arguments or bad arguments");
+		custom_error("Usage:", "./pipex <file1> <cmd1> <cmd2> <file2>");
 		exit(EXIT_FAILURE);
 	}
 	if (pipe(fd) == -1)
@@ -56,12 +56,14 @@ int	main(int argc, char **argv, char **envp)
 	if (pid == -1)
 		exit_error();
 	if (pid == 0)
+	{
+		close(fd[0]);
 		child_process(fd, argv, envp);
-	//close(fd[1]);
+	}
+	close(fd[1]);
 	waitpid(pid, NULL, 0);
 	father_process(fd, argv, envp);
-	//close(fd[0]);
-	//return (EXIT_SUCCESS);
+	close(fd[0]);
+	return (EXIT_SUCCESS);
 }
-
-// valgrind --leak-check=full --trace-children=yes ./pipex file1 cmd1 cmd2 file2
+// valgrind --leak-check=full --trace-children=yes

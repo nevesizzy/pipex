@@ -6,7 +6,7 @@
 /*   By: isneves- <isneves-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:51:45 by isneves-          #+#    #+#             */
-/*   Updated: 2024/09/26 16:09:26 by isneves-         ###   ########.fr       */
+/*   Updated: 2024/09/27 19:51:39 by isneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	*get_path(char *cmd, char **envp)
 	{
 		only_path = ft_strjoin(envp_paths[i], "/");
 		cmd_path = ft_strjoin(only_path, cmd);
-		free (only_path);
+		free(only_path);
 		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
 			ft_free(envp_paths);
@@ -71,16 +71,22 @@ void	run_cmd(char *cmd, char **envp)
 	char	*path;
 
 	cmd_and_flags = ft_split(cmd, ' ');
+	if (cmd_and_flags == NULL || cmd_and_flags[0] == NULL)
+	{
+		custom_error("run_cmd:", "command not found or invalid");
+		exit(EXIT_FAILURE);
+	}
 	path = get_path(cmd_and_flags[0], envp);
 	if (!path)
 	{
 		ft_free(cmd_and_flags);
+		free(path);
 		exit(127);
 	}
 	if (execve(path, cmd_and_flags, envp) == -1)
 	{
 		ft_free(cmd_and_flags);
-		free (path);
+		free(path);
 		exit_error();
 	}
 }

@@ -6,12 +6,31 @@
 /*   By: isneves- <isneves-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:51:37 by isneves-          #+#    #+#             */
-/*   Updated: 2024/09/26 16:26:35 by isneves-         ###   ########.fr       */
+/*   Updated: 2024/09/27 20:05:02 by isneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+void	envp_check(char **envp)
+{
+	int	i;
+	int	check;
+
+	i = 0;
+	check = 0;
+	while (envp[i])
+	{
+		if (ft_strnstr(envp[i], "PATH=", 5) && envp[i][6])
+			check = 1;
+		i++;
+	}
+	if (!check)
+	{
+		custom_error("Error", "There are no values ​​in the path environment.");
+		exit(EXIT_FAILURE);
+	}	
+}
 void	child_process(int *fd, char **argv, char **envp)
 {
 	int	fd_in;
@@ -21,6 +40,8 @@ void	child_process(int *fd, char **argv, char **envp)
 		exit_error();
 	dup2(fd[1], STDOUT_FILENO);
 	dup2(fd_in, STDIN_FILENO);
+	if (dup2(fd[1], STDOUT_FILENO) == -1 || dup2(fd_in, STDIN_FILENO) == -1)
+    		exit_error();
 	close(fd[0]);
 	run_cmd(argv[2], envp);
 }
@@ -50,6 +71,7 @@ int	main(int argc, char **argv, char **envp)
 		custom_error("Usage:", "./pipex <file1> <cmd1> <cmd2> <file2>");
 		exit(EXIT_FAILURE);
 	}
+	envp_check(envp);
 	if (pipe(fd) == -1)
 		exit_error();
 	pid = fork();

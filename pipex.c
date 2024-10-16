@@ -6,11 +6,17 @@
 /*   By: isneves- <isneves-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:51:37 by isneves-          #+#    #+#             */
-/*   Updated: 2024/09/27 20:05:02 by isneves-         ###   ########.fr       */
+/*   Updated: 2024/10/16 12:07:49 by isneves-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	wait_if_sleep(char *cmd, pid_t pid)
+{
+	if (ft_strncmp(cmd, "sleep", 5) == 0)
+		waitpid(pid, NULL, 0);
+}
 
 void	envp_check(char **envp)
 {
@@ -29,8 +35,9 @@ void	envp_check(char **envp)
 	{
 		custom_error("Error", "There are no values ​​in the path environment.");
 		exit(EXIT_FAILURE);
-	}	
+	}
 }
+
 void	child_process(int *fd, char **argv, char **envp)
 {
 	int	fd_in;
@@ -41,7 +48,7 @@ void	child_process(int *fd, char **argv, char **envp)
 	dup2(fd[1], STDOUT_FILENO);
 	dup2(fd_in, STDIN_FILENO);
 	if (dup2(fd[1], STDOUT_FILENO) == -1 || dup2(fd_in, STDIN_FILENO) == -1)
-    		exit_error();
+		exit_error();
 	close(fd[0]);
 	run_cmd(argv[2], envp);
 }
@@ -83,7 +90,7 @@ int	main(int argc, char **argv, char **envp)
 		child_process(fd, argv, envp);
 	}
 	close(fd[1]);
-	waitpid(pid, NULL, 0);
+	wait_if_sleep(argv[2], pid);
 	father_process(fd, argv, envp);
 	close(fd[0]);
 	return (EXIT_SUCCESS);

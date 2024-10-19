@@ -23,6 +23,8 @@ void	custom_error(char *header, char *msg);
 void	exit_error(void);
 void	ft_free(char **str);
 char	*get_path(char *cmd, char **env);
+char *check_absolute_path(char *cmd);
+char *find_in_path(char *cmd, char **envp);
 void	run_cmd(char *cmd, char **envp);
 void	envp_check(char **envp);
 

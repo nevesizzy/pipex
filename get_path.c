@@ -1,15 +1,8 @@
-// tentativa de path absoluta
-
-char *get_path(char *cmd, char **envp)
+char *check_absolute_path(char *cmd)
 {
-    char **envp_paths;
-    char *cmd_path;
-    int i;
-    char *only_path;
-
     if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/'))
     {
-        if (access(cmd, F_OK | X_OK) == 0)
+        if (access(cmd, F_OK | X_OK) == 0) 
             return (ft_strdup(cmd));
         else
         {
@@ -17,6 +10,16 @@ char *get_path(char *cmd, char **envp)
             return (NULL);
         }
     }
+    return (NULL);
+}
+
+char *find_in_path(char *cmd, char **envp)
+{
+    char **envp_paths;
+    char *cmd_path;
+    int i;
+    char *only_path;
+
     i = 0;
     while (!ft_strnstr(envp[i], "PATH=", 5))
         i++;
@@ -27,7 +30,7 @@ char *get_path(char *cmd, char **envp)
         only_path = ft_strjoin(envp_paths[i], "/");
         cmd_path = ft_strjoin(only_path, cmd);
         free(only_path);
-        if (access(cmd_path, F_OK | X_OK) == 0)
+        if (access(cmd_path, F_OK | X_OK) == 0) 
         {
             ft_free(envp_paths);
             return (cmd_path);
@@ -37,4 +40,13 @@ char *get_path(char *cmd, char **envp)
     ft_free(envp_paths);
     custom_error(cmd, "command not found");
     return (NULL);
+}
+
+char *get_path(char *cmd, char **envp)
+{
+    char *path;
+    path = check_absolute_path(cmd);
+    if (path != NULL)
+        return (path);
+    return (find_in_path(cmd, envp));
 }

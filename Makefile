@@ -8,7 +8,7 @@ LIBFOLDER = LIBFT
 
 LIBNAME = $(LIBFOLDER)/libft.a
 
-SRCS = pipex.c utils.c
+SRCS = pipex.c utils.c get_path.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

@@ -1,3 +1,5 @@
+#include "pipex.h"
+
 char *check_absolute_path(char *cmd)
 {
     if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/'))

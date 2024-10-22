@@ -16,13 +16,13 @@ char	*check_absolute_path(char *cmd)
 {
 	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/'))
 	{
-		if (access(cmd, F_OK | X_OK) == 0)
+		if (access(cmd, F_OK | X_OK) == 0) 
 			return (ft_strdup(cmd));
-	}
-	else
-	{
-		custom_error(cmd, "path not found");
-		return (NULL);
+		else
+		{
+			custom_error(cmd, "command not found");
+			return (NULL);
+		}
 	}
 	return (NULL);
 }

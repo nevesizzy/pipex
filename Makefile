@@ -20,7 +20,7 @@ $(NAME): $(OBJS) $(LIBNAME)
 	@echo "Compiled $<"
 
 $(LIBNAME):
-	make -C $(LIBFOLDER)
+	@make -C $(LIBFOLDER)
 	@echo "libft built"
 
 clean:
